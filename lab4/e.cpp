@@ -1,0 +1,110 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+class Node{
+    public:
+    long long data;
+    Node *left, *right;
+
+    Node(int data){
+        this->data = data;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+class BST{
+    public:
+    Node *root;
+    long long height;
+
+    BST(){
+        root = NULL;
+        height = 0;
+    }
+
+    Node *insert(Node *node, int data){
+        if(node == NULL){
+            node = new Node(data);
+            return node;
+        }
+        if(data < node->data){
+            node->left = insert(node->left, data);
+        }else if(data > node->data){
+            node->right = insert(node->right, data);
+        }
+        return node;
+        
+    }
+    
+    void inOrder(Node *node){
+        if(node == NULL)
+            return;
+        inOrder(node->left);
+        cout << node->data << endl;
+        inOrder(node->right);
+    }
+
+    void noChild(Node *node){
+        if(node == NULL){
+            return;
+        }
+        if(node->left == NULL and node->right == NULL){
+            cout << node->data << '\n';
+        }
+        noChild(node->left);
+        noChild(node->right);
+    }
+
+    
+
+    Node *findMin(Node *node){
+        while(node->left != NULL)
+            node = node->left;
+        return node;
+    }
+
+    Node *findMax(Node *node){
+        while(node->right != NULL)
+            node = node->right;
+        return node;
+    }
+
+    Node *deleteNode(Node *node, int data){
+        if(node == NULL)
+            return NULL;
+        if(data < node->data)
+            node->left = deleteNode(node->left, data);
+        else if(data > node->data)
+            node->right = deleteNode(node->right, data);
+        else{
+            if(node->right == NULL && node->left == NULL)
+                node = NULL;
+            else if(node->left == NULL)
+                node = node->right;
+            else if(node->right == NULL)
+                node = node->left;
+            else{
+                Node *tmp = findMin(node->right);
+                node->data = tmp->data;
+                node->right = deleteNode(node->right, tmp->data);
+            }
+        } 
+        return node;
+    }
+};
+
+int main(){
+    BST *bst = new BST();
+    while(true){
+        long long x;
+        cin >> x;
+        if(x == 0)
+            break;
+        bst->root = bst->insert(bst->root, x);
+    }
+    bst->noChild(bst->root);
+    return 0;
+}
